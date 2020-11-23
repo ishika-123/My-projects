@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>	Payslip</title>
+  </head>
+  <body>
+  
+  <form class="form-inline my-2 my-lg-0" action="#" method="POST">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit" onclick="genPay()">Search</button>
+    </form>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </body>
+</html>
+
+<?php
+
+genPay()
+{
+	/*session_start();
+	if (!isset($_SESSION['loggedin'])) {
+		header('Location:login.php');
+		exit();
+	}
+	*/
+	
+	$emp_no=filter_input(INPUT_POST, 'emp_no');
+	
+	
+	$DATABASE_HOST = 'localhost';
+	$DATABASE_USER = 'root';
+	$DATABASE_PASS = '';
+	$DATABASE_NAME = 'payroll';
+	$con = mysqli_connect($DATABASE_HOST, $DATABASE_USER, $DATABASE_PASS, $DATABASE_NAME);
+	
+	if (mysqli_connect_errno()) {
+		die ('Failed to connect to MySQL: ' . mysqli_connect_error());
+	}
+	if(isset($_POST['emp_no'])){
+	
+		$sql1="select * from salary where emp_no='$emp_no'";
+		$result=mysqli_query($con,$sql1);
+		if (mysqli_num_rows($result)==1)
+		{
+				$sql="select salary.emp_no,salary.basic_sal,salary.DA,salary.HRA,salary.bus,salary.security,salary.tax, salary.net from salary where salary.emp_no='$id'";
+				$result = mysqli_query($con, $sql);
+				if (mysqli_num_rows($result)>0 ) {
+					echo "<table border=1px solid black border-collapse:collapse>
+						<tr>
+						<th>Employee</th>
+						<th>Basic salary</th>
+						<th>DA</th>
+						<th>HRA</th>
+						<th>Bus</th>
+						<th>Security</th>
+						<th>Tax</th>
+						<th>Net</th>";
+				$i=1;
+				while($row = mysqli_fetch_assoc($result)) {
+					echo '<tr><td>'.$i.'</td>
+						<td>'.$row["emp_no"].'</td>
+						<td>'.$row["DA"].'</td>
+						<td>'.$row["HRA"].'</td>
+						<td>'.$row["bus"].'</td>
+						<td>'.$row["security"].'</td>
+						<td>'.$row["tax"].'</td>
+						<td>'.$row["net"].'</td>
+						</tr>';
+						$i=$i+1;
+				}
+					echo "</table>";
+			} else {
+				echo "no results";
+			}
+	}
+	else{
+		echo "no results";
+	
+}
+}
+?>
